@@ -14,8 +14,8 @@ object SetLogic {
   // pure
   def compile(term: Term): Term = term match {
     case Not(Not(value)) => compile(value)
-    case And(And(value)) => compile(value)
-    
+    case And(list: List[Term]) if list.size == 1 => compile(list.head)
+    case Or(list: List[Term]) if list.size == 1 => compile(list.head)
     case value => value
   }
 }
@@ -40,4 +40,8 @@ object Main {
   def runRecursive = SetLogic.compile(
     SetLogic.Not(SetLogic.Not(SetLogic.Not(SetLogic.Not(SetLogic.Not(SetLogic.Literal(1))))))
   )
+
+  def runAndSingle = SetLogic.compile(SetLogic.And(List(SetLogic.Literal(1))))
+
+  def runOrSingle = SetLogic.compile(SetLogic.Or(List(SetLogic.Literal(1))))
 }
